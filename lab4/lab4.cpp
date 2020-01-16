@@ -20,6 +20,13 @@ int		kolvo(spis* a);
 void	vivod(spis* a);
 int	    count(int number);
 void	masvivod(int** mas, int max);
+void	Del(spis* a);
+void	DelAll(spis* a);
+
+
+void	poisk(int** mas, int loop, int chis, int graf, int max, char* c[]);
+void	zapis(int** mas, int loop, char* c[]);
+
 
 int main(int argc, char* c[])
 {
@@ -91,7 +98,14 @@ int main(int argc, char* c[])
 		}
 
 		
+		
 		masvivod(mas, max);
+
+		for (int i = 1; i < max; i++)
+		{
+			poisk(mas, 0, i, i, max, c);
+		}
+		
 	}
 	else
 	{
@@ -100,6 +114,55 @@ int main(int argc, char* c[])
 	int end_time = clock();
 	vhod.close();
 	vihod.close();
+}
+
+void	poisk(int **mas, int loop, int chis, int graf, int max, char* c[])
+{
+	if (graf == chis && loop > 0)
+	{
+		zapis(mas, loop, c);
+		return;
+	}
+	if (loop >= max)
+		return;//?
+	mas[loop][0] = graf;
+	masvivod(mas, max);
+	for (int i = 1; i < max; i++)
+	{
+		if (mas[graf][i] != 0)
+			poisk(mas, loop + 1, chis, i, max,c);
+	}
+	return;
+}
+
+void	zapis(int** mas, int loop, char* c[])
+{
+	ofstream    vihod(c[2],ios_base::app);
+	for (int i = 0; i < loop; i++)
+	{
+		vihod << mas[i][0] << " ";
+	}
+	vihod << endl;
+	vihod.close();
+}
+
+void Del(spis* a)
+{
+	if (a->pred != NULL)
+		a->pred->next = a->next;
+	if (a->pred != NULL)
+		a->next->pred = a->pred;
+	a->next = NULL;
+	a->pred = NULL;
+
+	delete a;
+}
+
+void DelAll(spis *a)
+{
+	while (a->next != NULL)
+		Del(a->next);
+	delete a;
 }
 
 
